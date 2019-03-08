@@ -17,4 +17,4 @@ class Tail(object):
         # Logic goes here
 
 if __name__ == '__main__':
-    Tail(sys.argv[0])
+    tail = Tail(sys.argv[0])
