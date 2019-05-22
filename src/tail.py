@@ -30,7 +30,7 @@ class Tail(object):
         
         return process
     
-    def f(self, filename, ignore_stderr=True):
+    def f(self, filename):
 
         process = self.process(filename)
         
@@ -51,33 +51,11 @@ class Tail(object):
     
                 if lines:
                     for line in lines:
-                        if ignore_stderr:
-                            yield line
-                        else:
-                            yield (line, None)
+                        yield line
                     
             if process.stderr in reads:
                 stderr_input = process.stderr.read()
-                if not ignore_stderr:
-                    yield (None, stderr_input)
     
             if process.stderr in errors or process.stdout in errors:
                 print("Error received. Errors: ", errors)
                 process = self.process(filename)
-                
-    
-if __name__ == "__main__":
-        
-    parser = OptionParser()
-    parser.add_option("-n", "--lines",
-        dest="file_name", help="File for program tail.")
-        
-    (options, args) = parser.parse_args()
-        
-    if len(args) != 1:
-        parser.error("Please provide filename as argument")     
-
-    tail = Tail()   
-
-    for line in tail.f(args[0]):
-        print(line)
