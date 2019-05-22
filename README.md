@@ -1,18 +1,14 @@
 # tail
 
-Introduction
-============
+### Introduction
+
 My python implementaion of the linux tail command.
 
-Installation
-============
+### Installation
 
-  # To be written
+To be written
 
 
-Usage
-=====
+### Usage
 
-example::
-
-  # TO be written
+To be written
