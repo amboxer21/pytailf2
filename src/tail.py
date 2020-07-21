@@ -1,18 +1,8 @@
-#!/usr/bin/env python
-    
-import os
-import sys
-import fcntl
-import select
-import subprocess
-    
-from optparse import OptionParser
-    
 class Tail(object):
 
     def __init__(self):
         self.buffer       = str()
-        self.tail_command = ['/usr/bin/tail', '-F', '-n0']
+        self.tail_command = ['/usr/bin/sudo', '/usr/bin/tail', '-F', '-n0']
 
     def process(self,filename):
 
@@ -32,6 +22,7 @@ class Tail(object):
     
     def f(self, filename):
 
+        empty   = None
         process = self.process(filename)
         
         while True:
@@ -39,7 +30,7 @@ class Tail(object):
                 [process.stdout, process.stderr], [], [process.stdout, process.stderr], 0.1
             )
             if process.stdout in reads:
-                self.buffer += process.stdout.read()
+                self.buffer += str(process.stdout.read())
                 lines = self.buffer.split('\n')
                 
                 if '' in lines[-1]:
@@ -47,11 +38,21 @@ class Tail(object):
                     self.buffer = str()
                 else:
                     self.buffer = lines[-1]
-                lines = lines[:-1]
+
+                # Start of Python interoperability patch
+                if not lines[:-1]:
+                    empty = True
+                    lines = lines[-1]
+                else:
+                    empty = False
+                    lines = lines[:-1]
     
-                if lines:
+                if lines and not empty:
                     for line in lines:
                         yield line
+                else:
+                    yield lines
+                # End of Python interoperability patch
                     
             if process.stderr in reads:
                 stderr_input = process.stderr.read()
