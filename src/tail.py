@@ -1,3 +1,13 @@
+#!/usr/bin/env python
+    
+import os
+import sys
+import fcntl
+import select
+import subprocess
+    
+from optparse import OptionParser
+
 class Tail(object):
 
     def __init__(self):
